@@ -1,18 +1,14 @@
 function callendar(){
-	this.build = function(){
-		this.months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-		this.days_of_the_week = ["sun","mon","tue","wed","thu","fri","sat"]
-		this.date = new Date();
-		this.today = new Date();
-		this.x;
-		this.y;
-
-		this.wrapper = document.createElement('div');
-		this.wrapper.setAttribute("id","calendario");
-		this.header = document.createElement('div');;
-		this.body = document.createElement('div');
-		this.style();
-	}
+	this.months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+	this.days_of_the_week = ["sun","mon","tue","wed","thu","fri","sat"]
+	this.date = new Date();
+	this.today = new Date();
+	this.x;
+	this.y;
+	this.wrapper = document.createElement('div');
+	this.wrapper.setAttribute("id","calendario");
+	this.header = document.createElement('div');;
+	this.body = document.createElement('div');
 	// styles the callendar
 	this.style = function()
 	{
@@ -178,7 +174,7 @@ function callendar(){
 		this.currentElement = aaa;
 		this.x=aaa.offsetLeft;
 		this.y=aaa.offsetTop;
-		this.build();
+		this.style();
 		//TODO: move contruct to constructor
 		construct();
 		calendar = this.wrapper;
