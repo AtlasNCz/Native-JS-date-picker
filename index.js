@@ -1,13 +1,12 @@
 function callendar(){
 	this.months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 	this.days_of_the_week = ["sun","mon","tue","wed","thu","fri","sat"]
-	this.date = new Date();
 	this.today = new Date();
-	this.x;
-	this.y;
+	this.date = new Date();
 	this.wrapper = document.createElement('div');
 	this.wrapper.setAttribute("id","calendario");
 	this.header = document.createElement('div');;
+	this.dateHolder = document.createElement("span");
 	this.body = document.createElement('div');
 	// styles the callendar
 	this.style = function()
@@ -106,23 +105,23 @@ function callendar(){
 	}
 	this.dayStyle = function(day){
 		if(newDate.getMonth()<this.date.getMonth()){
-			day.setAttribute("onclick","call.previousMonth();selectDay("+newDate.getTime()+")");
+			day.setAttribute("onclick","call.previousMonth();call.select_day("+newDate.getTime()+")");
 			day.style.color="lightgrey";
 		}else if(newDate.getMonth()>this.date.getMonth()){
-			day.setAttribute("onclick","nextMonth();selectDay("+newDate.getTime()+")");
+			day.setAttribute("onclick","call.nextMonth();call.select_day("+newDate.getTime()+")");
 			day.style.color="lightgrey";
 		}else if(this.today.getDate() == newDate.getDate() &this.today.getMonth()==newDate.getMonth() &this.today.getYear()==newDate.getYear() ){
 			day.style.backgroundColor="lightgrey";
-			day.setAttribute("onclick","selectDay("+newDate.getTime()+")");
+			day.setAttribute("onclick","call.select_day("+newDate.getTime()+")");
 			day.setAttribute("class","selectedDay");
 		}else{
-			day.setAttribute("onclick","selectDay("+newDate.getTime()+")");
+			day.setAttribute("onclick","call.select_day("+newDate.getTime()+")");
 		}
 	}
 	this.daysUpdate = function(){
 		var daySection=document.createElement("span");
 		daySection.style.transition="width .2s";
-		newDate = getFirstSunday(this.date);
+		newDate = this.get_first_sunday(this.date);
 		for(i = 0;i < 6;i++){
 			var days = document.createElement('div');
 			for(j = 0;j<7;j++){
@@ -140,15 +139,14 @@ function callendar(){
 	this.nextMonth = function(){
 		this.date.setMonth(this.date.getMonth() + 1);
 		
-		//TODO: rename tantFaz
-		var tantoFaz = this.body.firstChild;
-		tantoFaz.style.width="0px";
-		tantoFaz.style.overflow="hidden";
+		var current = this.body.firstChild;
+		current.style.width="0px";
+		current.style.overflow="hidden";
 		setTimeout(function(){
 			call.body.removeChild(call.body.firstChild);
 		},200);
 		this.body.appendChild(this.daysUpdate());
-		dateHolder.innerHTML= this.months[this.date.getMonth()]+" "+(this.date.getYear()+1900);
+		this.dateHolder.innerHTML= this.months[this.date.getMonth()]+" "+(this.date.getYear()+1900);
 	}
 	this.previousMonth = function()
 	{
@@ -156,102 +154,115 @@ function callendar(){
 		setTimeout(function(){
 			call.body.removeChild(call.body.lastChild);
 		},200);
-		this.body.insertBefore(this.daysUpdate(),this.body.firstChild);
-		//TODO: rename tantoFaz
-		var tantoFaz=this.body.firstChild;
-		tantoFaz.style.transition="width .2s";
-		tantoFaz.style.width="0px";
-		setTimeout(function(){
-			tantoFaz.style.width="220px";
-		},1);
-		tantoFaz.style.overflow="hidden";
-		dateHolder.innerHTML= this.months[this.date.getMonth()]+" "+(this.date.getYear()+1900);
+		var aaaaaa= this.daysUpdate();
+		var current = this.body.insertBefore(aaaaaa,this.body.firstChild);
+		current.style.width="0px";
+		current.style.transition="width .2s linear .2s";
+		current.style.width="220px";
+		current.style.overflow="hidden";
+		this.dateHolder.innerHTML= this.months[this.date.getMonth()]+" "+(this.date.getYear()+1900);
 	}
 	this.open = function(aaa)
 	{
 		calendar = document.getElementById("calendario");
+		if(!this.wrapper.firstChild)
+		{
+			this.style();
+			this.construct();
+		}else{
+			this.date = new Date();
+			this.dateHolder.innerHTML= this.months[this.date.getMonth()]+" "+(this.date.getYear()+1900);
+			console.log("reste");
+			//TODO: reset days
+		}
 		//TODO: rename aaa
 		this.currentElement = aaa;
 		this.x=aaa.offsetLeft;
 		this.y=aaa.offsetTop;
-		this.style();
-		//TODO: move contruct to constructor
-		construct();
-		calendar = this.wrapper;
 		dateDaysSpan = call.daysUpdate();
 		call.body.appendChild(dateDaysSpan);
-		calendar = document.body.appendChild(calendar);
-		calendar.style.position = "fixed";
-		calendar.style.top = this.y+"px";
-		if(this.x-110>=0){
-			calendar.style.left = (this.x-110)+"px";	
-		}else{
-			calendar.style.left = "0px";	
+		if(!calendar){
+			calendar = document.body.appendChild(this.wrapper);
 		}
-		setTimeout(function(){
-			document.addEventListener("click", closeCalendar);
-		},10);
+		this.wrapper.style.position = "fixed";
+		this.wrapper.style.top = this.y+"px";
+		if(this.x-110>=0){
+			this.wrapper.style.left = (this.x-110)+"px";	
+		}else{
+			this.wrapper.style.left = "0px";	
+		}
+
+	}
+
+	this.construct = function(){
+		var dateHolderText= document.createTextNode(call.months[call.today.getMonth()]+" "+(call.today.getYear()+1900));
+		this.dateHolder.appendChild(dateHolderText);
+
+		var previous_month_button = document.createElement("span");
+		previous_month_button.setAttribute("onclick","call.previousMonth()");
+		call.header.appendChild(previous_month_button);
+		call.header.appendChild(this.dateHolder);
+		var next_month_button = document.createElement("span");
+		next_month_button.setAttribute("onclick","call.nextMonth()");
+
+		call.header.appendChild(next_month_button);
+		call.wrapper.appendChild(call.header);
+
+		week_days = document.createElement('div');
+		day_of_the_week = [];
+		day_of_the_week_text = [];
+		for(i=0;i<7;i++){
+			day_of_the_week.push(document.createElement("span"));
+			day_of_the_week_text.push(document.createTextNode(call.days_of_the_week[i]));
+			day_of_the_week[i].appendChild(day_of_the_week_text[i]);
+			week_days.appendChild(day_of_the_week[i]);
+		}
+		call.wrapper.appendChild(week_days);
+		call.wrapper.appendChild(call.body);
+	}
+	this.get_first_sunday = function(date){
+		var otherDate = new Date;
+		if(date){
+			otherDate.setTime(date);
+		}
+		otherDate.setDate(1);
+		if(otherDate.getDay()==0){
+			otherDate.setDate(otherDate.getDate() - 7);	
+		}else{
+			otherDate.setDate(otherDate.getDate() - otherDate.getDay());	
+		}
+		return otherDate;
+	}
+	this.select_day = function(a){
+		var otherDate = new Date;
+				otherDate.setTime(a);
+		this.currentElement.value = otherDate.getDate()+"/"+(otherDate.getMonth()+1)+"/"+(otherDate.getYear()+1900);
+
+		this.close();
+	}
+	this.close = function(a){
+		teste=0;
+		calendar = document.getElementById("calendario");
+		if(a)
+		{
+			if(a.target)
+			{
+				x = a.target;
+				while(x != document.body && x!= document.documentElement){
+					if(x.id=="calendario"||x.getAttribute("onclick")=="call.open(this)"){
+						teste = 1;
+					}
+					x = x.parentNode;
+				}	
+			}
+		}
+		if(!teste && calendar || !a){
+			while (call.body.firstChild) {
+			    call.body.removeChild(call.body.firstChild);
+			}
+			document.body.removeChild(calendar);
+		}
 	}
 }
 call = new callendar();
-function construct(){
-	dateHolder = document.createElement("span");
-	dateHolderText= document.createTextNode(call.months[call.today.getMonth()]+" "+(call.today.getYear()+1900));
-	dateHolder.appendChild(dateHolderText);
-
-	decMonthBut = document.createElement("span");
-	decMonthBut.setAttribute("onclick","call.previousMonth()");
-	call.header.appendChild(decMonthBut);
-	call.header.appendChild(dateHolder);
-	incMonthBut = document.createElement("span");
-	incMonthBut.setAttribute("onclick","call.nextMonth()");
-	call.header.appendChild(incMonthBut);
-	call.wrapper.appendChild(call.header);
-	weekDays = document.createElement('div');
-	weekDay = [];
-	weekDayText = [];
-	for(i=0;i<7;i++){
-		weekDay.push(document.createElement("span"));
-		weekDayText.push(document.createTextNode(call.days_of_the_week[i]));
-	}
-	for(i=0;i<7;i++){
-		weekDay[i].appendChild(weekDayText[i]);
-		weekDays.appendChild(weekDay[i]);
-	}
-	call.wrapper.appendChild(weekDays);
-	call.wrapper.appendChild(call.body);
-}
-
-
-function getFirstSunday(date){
-	var otherDate = new Date;
-	if(date){
-		otherDate.setTime(date);
-	}
-	otherDate.setDate(1);
-	if(otherDate.getDay()==0){
-		otherDate.setDate(otherDate.getDate() - 7);	
-	}else{
-		otherDate.setDate(otherDate.getDate() - otherDate.getDay());	
-	}
-	return otherDate;
-}
-function selectDay(a){
-	var otherDate = new Date;
-	otherDate.setTime(a);
-	document.body.removeChild(calendar);
-}
-function closeCalendar(a){
-	teste=0;
-	x = a.target;
-	while(x != document.body){
-		if(x.id=="calendario"||x.getAttribute("onclick")=="setup(this)"){
-			teste = 1;
-		}
-		x = x.parentNode;
-	}
-	if(!teste){
-		document.body.removeChild(document.getElementById("calendario"));
-		document.removeEventListener("click", closeCalendar,false);
-	}
-}
+document.addEventListener("click", call.close);
