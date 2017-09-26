@@ -138,7 +138,6 @@ function callendar(){
 	}
 	this.nextMonth = function(){
 		this.date.setMonth(this.date.getMonth() + 1);
-		
 		var current = this.body.firstChild;
 		current.style.width="0px";
 		current.style.overflow="hidden";
@@ -172,17 +171,27 @@ function callendar(){
 		}else{
 			this.date = new Date();
 			this.dateHolder.innerHTML= this.months[this.date.getMonth()]+" "+(this.date.getYear()+1900);
-			console.log("reste");
+			console.log("reste")
 			//TODO: reset days
 		}
 		//TODO: rename aaa
 		this.currentElement = aaa;
-		this.x=aaa.offsetLeft;
-		this.y=aaa.offsetTop;
 		dateDaysSpan = call.daysUpdate();
 		call.body.appendChild(dateDaysSpan);
 		if(!calendar){
 			calendar = document.body.appendChild(this.wrapper);
+		}
+		if(call.x + this.wrapper.clientWidth/2 > window.innerWidth)
+		{
+			this.x=window.innerWidth - 17 -  this.wrapper.clientWidth/2;
+		}else{
+			this.x=call.x;
+		}
+		if(call.y + this.wrapper.clientHeight > window.innerHeight)
+		{
+			this.y=window.innerHeight - this.wrapper.clientHeight;
+		}else{
+			this.y=call.y;
 		}
 		this.wrapper.style.position = "fixed";
 		this.wrapper.style.top = this.y+"px";
@@ -266,3 +275,4 @@ function callendar(){
 }
 call = new callendar();
 document.addEventListener("click", call.close);
+document.addEventListener("mousemove", function(event){ call.x=event.clientX; call.y=event.clientY;});
