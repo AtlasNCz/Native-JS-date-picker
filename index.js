@@ -1,4 +1,4 @@
-function callendar(){
+function Date_picker(){
 	this.months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 	this.days_of_the_week = ["sun","mon","tue","wed","thu","fri","sat"]
 	this.today = new Date();
@@ -8,7 +8,7 @@ function callendar(){
 	this.header = document.createElement('div');;
 	this.dateHolder = document.createElement("span");
 	this.body = document.createElement('div');
-	// styles the callendar
+	// styles the Date_picker
 	this.style = function()
 	{
 		styleSheet = document.createElement("style");
@@ -111,17 +111,17 @@ function callendar(){
 	}
 	this.dayStyle = function(day){
 		if(newDate.getMonth()<this.date.getMonth()){
-			day.setAttribute("onclick","call.previousMonth();call.select_day("+newDate.getTime()+")");
+			day.setAttribute("onclick","date_picker.previousMonth();date_picker.select_day("+newDate.getTime()+")");
 			day.style.color="lightgrey";
 		}else if(newDate.getMonth()>this.date.getMonth()){
-			day.setAttribute("onclick","call.nextMonth();call.select_day("+newDate.getTime()+")");
+			day.setAttribute("onclick","date_picker.nextMonth();date_picker.select_day("+newDate.getTime()+")");
 			day.style.color="lightgrey";
 		}else if(this.today.getDate() == newDate.getDate() &this.today.getMonth()==newDate.getMonth() &this.today.getYear()==newDate.getYear() ){
 			day.style.backgroundColor="lightgrey";
-			day.setAttribute("onclick","call.select_day("+newDate.getTime()+")");
+			day.setAttribute("onclick","date_picker.select_day("+newDate.getTime()+")");
 			day.setAttribute("class","selectedDay");
 		}else{
-			day.setAttribute("onclick","call.select_day("+newDate.getTime()+")");
+			day.setAttribute("onclick","date_picker.select_day("+newDate.getTime()+")");
 		}
 	}
 	this.daysUpdate = function(){
@@ -148,7 +148,7 @@ function callendar(){
 		current.style.width="0px";
 		current.style.overflow="hidden";
 		setTimeout(function(){
-			call.body.removeChild(call.body.firstChild);
+			date_picker.body.removeChild(date_picker.body.firstChild);
 		},200);
 		this.body.appendChild(this.daysUpdate());
 		this.dateHolder.innerHTML= this.months[this.date.getMonth()]+" "+(this.date.getYear()+1900);
@@ -157,7 +157,7 @@ function callendar(){
 	{
 		this.date.setMonth(this.date.getMonth() - 1);
 		setTimeout(function(){
-			call.body.removeChild(call.body.lastChild);
+			date_picker.body.removeChild(date_picker.body.lastChild);
 		},200);
 		var aaaaaa= this.daysUpdate();
 		var current = this.body.insertBefore(aaaaaa,this.body.firstChild);
@@ -178,31 +178,31 @@ function callendar(){
 			this.date = new Date();
 			this.dateHolder.innerHTML= this.months[this.date.getMonth()]+" "+(this.date.getYear()+1900);
 			console.log("reste")
-			while (call.body.firstChild) { //-> 
-			    call.body.removeChild(call.body.firstChild);
+			while (date_picker.body.firstChild) { //-> 
+			    date_picker.body.removeChild(date_picker.body.firstChild);
 			}
 		}
-		while (call.body.firstChild) { //-> 
-		    call.body.removeChild(call.body.firstChild);
+		while (date_picker.body.firstChild) { //-> 
+		    date_picker.body.removeChild(date_picker.body.firstChild);
 		}
 		//TODO: rename aaa
 		this.currentElement = aaa;
-		dateDaysSpan = call.daysUpdate();
-		call.body.appendChild(dateDaysSpan);
+		dateDaysSpan = date_picker.daysUpdate();
+		date_picker.body.appendChild(dateDaysSpan);
 		if(!calendar){
 			calendar = document.body.appendChild(this.wrapper);
 		}
-		if(call.x + this.wrapper.clientWidth/2 > window.innerWidth)
+		if(date_picker.x + this.wrapper.clientWidth/2 > window.innerWidth)
 		{
 			this.x=window.innerWidth - 17 -  this.wrapper.clientWidth/2;
 		}else{
-			this.x=call.x;
+			this.x=date_picker.x;
 		}
-		if(call.y + this.wrapper.clientHeight > window.innerHeight)
+		if(date_picker.y + this.wrapper.clientHeight > window.innerHeight)
 		{
 			this.y=window.innerHeight - this.wrapper.clientHeight;
 		}else{
-			this.y=call.y;
+			this.y=date_picker.y;
 		}
 		this.wrapper.style.position = "fixed";
 		this.wrapper.style.top = this.y+"px";
@@ -215,30 +215,30 @@ function callendar(){
 	}
 
 	this.construct = function(){
-		var dateHolderText= document.createTextNode(call.months[call.today.getMonth()]+" "+(call.today.getYear()+1900));
+		var dateHolderText= document.createTextNode(date_picker.months[date_picker.today.getMonth()]+" "+(date_picker.today.getYear()+1900));
 		this.dateHolder.appendChild(dateHolderText);
 
 		var previous_month_button = document.createElement("span");
-		previous_month_button.setAttribute("onclick","call.previousMonth()");
-		call.header.appendChild(previous_month_button);
-		call.header.appendChild(this.dateHolder);
+		previous_month_button.setAttribute("onclick","date_picker.previousMonth()");
+		date_picker.header.appendChild(previous_month_button);
+		date_picker.header.appendChild(this.dateHolder);
 		var next_month_button = document.createElement("span");
-		next_month_button.setAttribute("onclick","call.nextMonth()");
+		next_month_button.setAttribute("onclick","date_picker.nextMonth()");
 
-		call.header.appendChild(next_month_button);
-		call.wrapper.appendChild(call.header);
+		date_picker.header.appendChild(next_month_button);
+		date_picker.wrapper.appendChild(date_picker.header);
 
 		week_days = document.createElement('div');
 		day_of_the_week = [];
 		day_of_the_week_text = [];
 		for(i=0;i<7;i++){
 			day_of_the_week.push(document.createElement("span"));
-			day_of_the_week_text.push(document.createTextNode(call.days_of_the_week[i]));
+			day_of_the_week_text.push(document.createTextNode(date_picker.days_of_the_week[i]));
 			day_of_the_week[i].appendChild(day_of_the_week_text[i]);
 			week_days.appendChild(day_of_the_week[i]);
 		}
-		call.wrapper.appendChild(week_days);
-		call.wrapper.appendChild(call.body);
+		date_picker.wrapper.appendChild(week_days);
+		date_picker.wrapper.appendChild(date_picker.body);
 	}
 	this.get_first_sunday = function(date){
 		var otherDate = new Date;
@@ -269,7 +269,7 @@ function callendar(){
 			{
 				x = a.target;
 				while(x != document.body && x!= document.documentElement){
-					if(x.id=="calendario"||x.getAttribute("onclick")=="call.open(this)"){
+					if(x.id=="calendario"||x.getAttribute("onclick")=="date_picker.open(this)"){
 						teste = 1;
 					}
 					x = x.parentNode;
@@ -281,6 +281,6 @@ function callendar(){
 		}
 	}
 }
-call = new callendar();
-document.addEventListener("click", call.close);
-document.addEventListener("mousemove", function(event){ call.x=event.clientX; call.y=event.clientY;});
+date_picker = new Date_picker();
+document.addEventListener("click", date_picker.close);
+document.addEventListener("mousemove", function(event){ date_picker.x=event.clientX; date_picker.y=event.clientY;});
