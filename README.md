@@ -1,11 +1,5 @@
 # Native-JS-Date-Picker
-This is a ver
-
-<!-- <script type="text/javascript" src="index.js"></script>
-<form action="">
-	<input type="text" onclick="call.open(this)">
-</form>
--->
+A simple date picker popup, where the user can select a date and set it to a html element
 
 ## Getting Started
 Just include "date-picker.js" in your html page <br/>
@@ -25,6 +19,3 @@ you can just choose the theme you want at https://atlasncz.github.io/Native-JS-d
 * **Renã Souza** - [AtlazNCz](https://github.com/AtlasNCz)
 
 ## License
-
-
-awdawdawdawd
