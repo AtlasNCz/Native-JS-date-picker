@@ -12,10 +12,5 @@ It creates a Date_picker object called date_picker, all you need to do is to ass
 ### Examples
 You can see examples and different themes at https://atlasncz.github.io/Native-JS-date-picker/
 
-### Add different themes
-you can just choose the theme you want at https://atlasncz.github.io/Native-JS-date-picker/ and change it with the command date_picker.style();
-
 ## Authors
 * **Renã Souza** - [AtlazNCz](https://github.com/AtlasNCz)
-
-## License
